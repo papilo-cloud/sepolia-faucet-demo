@@ -67,4 +67,13 @@ describe('Faucet contract', () => {
 
         await expect(faucet.connect(user1).withdraw(amount)).to.emit(faucet, 'Withdraw')
     })
+
+    it('should allow owner to pause and unpause', async () => {
+      const amount = ethers.utils.parseEther('0.05')
+        await faucet.connect(owner).togglePaused()
+        await expect(faucet.connect(user2).withdraw(amount)).to.be.reverted
+
+        await faucet.connect(owner).togglePaused()
+        await expect(faucet.connect(user2).withdraw(amount)).to.emit(faucet, 'Withdraw')
+    })
 })
